@@ -15,6 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Remove packageManager
+        run: jq 'del(.packageManager)' package.json > package.tmp && mv package.tmp package.json
+
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
