@@ -10,14 +10,14 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: active-languages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-
-      - name: Set up directory
-        run: cd active-languages || exit 1
 
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
