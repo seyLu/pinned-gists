@@ -16,6 +16,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up directory
+        run: cd active-languages || exit 1
+
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
 
@@ -38,4 +41,4 @@ jobs:
 
           GIST_ID: ${{ vars.AL_GIST_ID }}
 
-          EXCLUDE: ${{ vars.EXCLUDE }}
+          EXCLUDE_LANG: ${{ vars.EXCLUDE_LANG }}

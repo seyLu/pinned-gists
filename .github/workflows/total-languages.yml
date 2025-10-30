@@ -15,12 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Remove bun lockfile
-        run: rm -f bun.lockb || true
-
-      - name: Remove bun packageManager
-        run: jq 'del(.packageManager)' package.json > package.tmp && mv package.tmp package.json
-
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
@@ -43,5 +37,5 @@ jobs:
           GIST_ID: ${{ vars.TL_GIST_ID }}
 
           DESCRIPTION: ${{ vars.TL_GIST_DESCRIPTION }}
-          EXCLUDE: ${{ vars.EXCLUDE }}
+          EXCLUDE: ${{ vars.EXCLUDE_LANG }}
           EXCLUDE_REPO: ${{ vars.EXCLUDE_REPO }}
