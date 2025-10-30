@@ -16,10 +16,7 @@ export async function getExcludedExtensions(): Promise<Set<string>> {
       .filter(Boolean),
   );
 
-  const yml = fs.readFileSync(
-    path.join(__dirname, '/store/languages.yml'),
-    'utf8',
-  );
+  const yml = fs.readFileSync(path.join(__dirname, '/store/languages.yml'), 'utf8');
   const langs = yaml.load(yml) as Record<string, LangDef>;
 
   const excludedExtensions = new Set<string>();

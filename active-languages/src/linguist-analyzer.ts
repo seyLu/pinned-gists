@@ -54,18 +54,13 @@ const runCommand = (command: string): Promise<string> =>
     });
   });
 
-const runCommandWithRetry = async (
-  command: string,
-  retries = 3,
-): Promise<string> => {
+const runCommandWithRetry = async (command: string, retries = 3): Promise<string> => {
   for (let i = 0; i < retries; i++) {
     try {
       return await runCommand(command);
     } catch (error) {
       if (i === retries - 1) throw error;
-      console.warn(
-        `Command failed, retrying (${i + 1}/${retries}): ${command}`,
-      );
+      console.warn(`Command failed, retrying (${i + 1}/${retries}): ${command}`);
       await new Promise((resolve) => setTimeout(resolve, 1000)); // 等待1秒后重试
     }
   }
@@ -110,12 +105,8 @@ export const runLinguist = async (
     );
 
     await Promise.all([
-      ...processFileData.map((file) =>
-        writeFile(file.path, createFileContent(file)),
-      ),
-      await runCommandWithRetry(
-        'echo "*.* linguist-detectable" > .gitattributes',
-      ),
+      ...processFileData.map((file) => writeFile(file.path, createFileContent(file))),
+      await runCommandWithRetry('echo "*.* linguist-detectable" > .gitattributes'),
       await runCommandWithRetry(
         'git config user.name "dummy" && git config user.email "dummy@github.com"',
       ),
@@ -129,26 +120,24 @@ export const runLinguist = async (
     const linguistResult = JSON.parse(stdout) as LinguistResult;
 
     // Process the language stats
-    const languageStats = Object.entries(linguistResult).map(
-      ([name, stats]) => {
-        const additions = stats.files.reduce(
-          (sum, filePath) => sum + (pathFileMap[filePath]?.additions ?? 0),
-          0,
-        );
-        const deletions = stats.files.reduce(
-          (sum, filePath) => sum + (pathFileMap[filePath]?.deletions ?? 0),
-          0,
-        );
-        return {
-          name,
-          additions,
-          deletions,
-          count: stats.files.length,
-          // Calculate initial percent based on the returned data
-          percent: additions + deletions, // placeholder for percent, will be recalculated
-        };
-      },
-    );
+    const languageStats = Object.entries(linguistResult).map(([name, stats]) => {
+      const additions = stats.files.reduce(
+        (sum, filePath) => sum + (pathFileMap[filePath]?.additions ?? 0),
+        0,
+      );
+      const deletions = stats.files.reduce(
+        (sum, filePath) => sum + (pathFileMap[filePath]?.deletions ?? 0),
+        0,
+      );
+      return {
+        name,
+        additions,
+        deletions,
+        count: stats.files.length,
+        // Calculate initial percent based on the returned data
+        percent: additions + deletions, // placeholder for percent, will be recalculated
+      };
+    });
 
     // Calculate total additions and deletions across all languages
     const totalChanges = languageStats.reduce(

@@ -40,9 +40,7 @@ const generateBarChart = (percent: number, size: number): string => {
   );
 };
 
-export const createLanguageStats = (
-  languages: ProcessedLanguageStats[],
-): string => {
+export const createLanguageStats = (languages: ProcessedLanguageStats[]): string => {
   return languages
     .map(({ name, percent, additions, deletions }) => {
       const truncatedName = truncateString(name, 10).padEnd(10);
