@@ -1,0 +1,47 @@
+name: Total Languages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  language-box:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove bun lockfile
+        run: rm -f bun.lockb || true
+
+      - name: Remove bun packageManager
+        run: jq 'del(.packageManager)' package.json > package.tmp && mv package.tmp package.json
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 10
+          run_install: true
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Update
+        run: pnpm dlx github-lang-box@2
+        env:
+          GH_USERNAME: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+          GIST_ID: ${{ vars.TL_GIST_ID }}
+
+          DESCRIPTION: ${{ vars.TL_GIST_DESCRIPTION }}
+          EXCLUDE: ${{ vars.EXCLUDE }}
+          EXCLUDE_REPO: ${{ vars.EXCLUDE_REPO }}

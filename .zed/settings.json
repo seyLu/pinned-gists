@@ -1,0 +1,17 @@
+{
+  "languages": {
+    "TypeScript": { "formatter": { "language_server": { "name": "biome" } } }
+  },
+  "lsp": {
+    "biome": {
+      "settings": {
+        "require_config_file": true,
+        "arguments": ["lsp-proxy"]
+      }
+    }
+  },
+  "code_actions_on_format": {
+    "source.organizeImports.biome": true,
+    "source.fixAll.biome": true
+  }
+}
