@@ -19,8 +19,6 @@
 
 <br>
 
-### Pinned Gists:
-
 #### [active-languages](https://github.com/seyLu/pinned-gists/blob/main/packages/active-languages/README.md)
 <img height=200 src="./packages/active-languages/active-languages.svg" alt="active-languages icon">
 
@@ -47,9 +45,11 @@ cp .env.example .env
 GH_USERNAME=xxx
 GH_TOKEN=xxx
 
+# active-languages
 AL_GIST_ID=xxx
 AL_GIST_DESCRIPTION=⚡ Active Languages
 
+# total-languages
 TL_GIST_ID=xxx
 TL_GIST_DESCRIPTION=💻 Dev Footprint
 
@@ -64,3 +64,36 @@ EXCLUDE_REPO=xxx
 pnpm al:dev
 # will run dev script of 'active-languages' package
 ```
+
+<br>
+
+### GitHub Actions
+Prefix
+- AL (active-languages)
+- TL (total-languages)
+
+#### Repository Environment Secret:
+
+> *Required*
+
+| Variable       | Description                                                                                               |
+| -------------- | --------------------------------------------------------------------------------------------------------- |
+| GH_TOKEN       | GitHub access token with `gist` and `metadata:read` scopes                                                |
+
+#### Repository Environment Variable:
+
+> *Required*
+
+| Variable       | Description                                                                                               |
+| -------------- | --------------------------------------------------------------------------------------------------------- |
+| AL_GIST_ID     | The ID from your gist URL: `https://gist.github.com/<username>/<gist-id>`                                    |
+| TL_GIST_ID     | The ID from your gist URL: `https://gist.github.com/<username>/<gist-id>`                                    |
+
+> *Optional*
+
+| Variable       | Description                                                                                               |
+| ------------   | --------------------------------------------------------------------------------------------------------- |
+| EXCLUDE_LANG   | Comma-separated list of languages to exclude <br> Example: `Jupyter Notebook,CSS,TeX,PHP`                 |
+| EXCLUDE_REPO   | Comma-separated list of repositories to exclude <br> Example: `repo1,repo2`                               |
+| AL_DESCRIPTION | Custom description for the gist                                                         |
+| TL_DESCRIPTION | Custom description for the gist                                                                           |
