@@ -1,12 +1,7 @@
 # Active Langugages
 
-> ✨ Inspired by [lang-box](https://github.com/inokawa/lang-box), [recent-languages-box](https://github.com/liby/recent-languages-box)
->
-> 📌 For more pinned-gist projects, check out: [awesome-pinned-gists](https://github.com/matchai/awesome-pinned-gists)
-
 This project analyzes your recent GitHub commits using the GitHub API and [Linguist](https://github.com/github-linguist/linguist) to display the percentage of each programming language used. It also calculates the number of lines added/removed per language.
 
-## [Preview](https://gist.github.com/seyLu/8357a43db37b23493f8cc80ac0e1e412)
 
 ## Setup Guide
 
