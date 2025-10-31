@@ -10,6 +10,23 @@ This project analyzes your recent GitHub commits using the GitHub API and [Lingu
 
 ## Setup Guide
 
+**Environment Variables:**
+
+> *Required*
+
+| Variable       | Description                                                                                               |
+| -------------- | --------------------------------------------------------------------------------------------------------- |
+| GH_TOKEN       | GitHub access token with `gist` and `metadata:read` scopes                                                |
+| AL_GIST_ID     | The ID from your gist URL: `https://gist.github.com/<username>/8357a43db37b23493f8cc80ac0e1e412` |
+
+> *Optional*
+
+| Variable       | Description                                                                                               |
+| ------------   | --------------------------------------------------------------------------------------------------------- |
+| EXCLUDE_LANG   | Comma-separated list of languages to exclude <br> Example: `Jupyter Notebook,CSS,TeX,PHP`                 |
+| EXCLUDE_REPO   | Comma-separated list of repositories to exclude <br> Example: `username/repo1,username/repo2`             |
+| AL_DESCRIPTION | Custom description for the gist                                                                           |
+
 ### 1. Create a GitHub Gist
 
   1. Go to [https://gist.github.com/](https://gist.github.com/) and create a new public gist.
@@ -60,3 +77,7 @@ This project analyzes your recent GitHub commits using the GitHub API and [Lingu
 ### 4. Pin the Gist to Your Profile
 
 Follow GitHub's guide on [pinning items to your profile](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/pinning-items-to-your-profile) to display your language stats.
+
+## Credits
+
+- Built on top of [liby/recent-languages-box](https://github.com/liby/recent-languages-box) with tons of improvements and changes

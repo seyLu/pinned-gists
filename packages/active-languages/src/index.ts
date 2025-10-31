@@ -115,6 +115,7 @@ const updateGist = async (gistId: string, content: string) => {
     const filename = Object.keys(gist.data.files ?? {})[0];
     await githubRequest('PATCH /gists/{gist_id}', {
         gist_id: gistId,
+        description: '' || '⚡ Active Languages',
         files: {
             [filename]: {
                 filename: `seyLu's Recent Coding Languages`,

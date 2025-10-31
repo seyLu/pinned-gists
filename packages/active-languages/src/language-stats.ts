@@ -25,7 +25,7 @@ const formatNumber = (num: number): string => {
 
 const generateBarChart = (percent: number, size: number): string => {
     const symbols = '░▏▎▍▌▋▊▉█';
-    const fractionComplete = Math.floor((size * 8 * percent) / 100);
+    const fractionComplete = Math.round((size * 8 * percent) / 100);
     const fullBars = Math.floor(fractionComplete / 8);
 
     if (fullBars >= size) {
