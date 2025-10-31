@@ -21,14 +21,11 @@
 
 ### Pinned Gists:
 
-<img height=300 src="./packages/active-languages/active-languages.svg" alt="active-languages icon">
-
 #### [active-languages](https://github.com/seyLu/pinned-gists/blob/main/packages/active-languages/README.md)
-
-
-<img height=300 src="./packages/total-languages/total-languages.svg" alt="total-languages icon">
+<img height=250 src="./packages/active-languages/active-languages.svg" alt="active-languages icon">
 
 #### [total-languages](https://github.com/seyLu/pinned-gists/blob/main/packages/total-languages/README.md)
+<img height=250 src="./packages/total-languages/total-languages.svg" alt="total-languages icon">
 
 <br>
 
