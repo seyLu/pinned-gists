@@ -3,7 +3,7 @@
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
-    "includes": ["**", "!**/bun.lockb", "!**/node_modules"],
+    "includes": ["**", "!**/node_modules", "!**/dist/"],
     "attributePosition": "auto",
     "indentStyle": "space",
     "indentWidth": 2,
@@ -13,7 +13,8 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
-      "semicolons": "always"
+      "semicolons": "always",
+      "indentWidth": 4
     }
   },
   "json": {
@@ -25,6 +26,13 @@
     "enabled": true,
     "rules": {
       "recommended": true
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
     }
   }
 }

@@ -12,15 +12,28 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: active-languages
+        working-directory: packages/active-languages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Remove packageManager
+        run: jq 'del(.packageManager)' package.json > package.tmp && mv package.tmp package.json
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 10
+          run_install: true
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
 
       - name: Install APT dependencies
         run: |
@@ -31,14 +44,12 @@ jobs:
         if: steps.cache-linguist.outputs.cache-hit != 'true'
         run: sudo gem install github-linguist
 
-      - name: Install dependencies
-        run: bun i
-
-      - run: bun start
+      - run: pnpm al:build
+      - run: pnpm al:start
         env:
           GH_USERNAME: ${{ github.actor }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-          GIST_ID: ${{ vars.AL_GIST_ID }}
+          AL_GIST_ID: ${{ vars.AL_GIST_ID }}
 
           EXCLUDE_LANG: ${{ vars.EXCLUDE_LANG }}
