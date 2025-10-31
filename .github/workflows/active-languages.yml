@@ -48,5 +48,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
           AL_GIST_ID: ${{ vars.AL_GIST_ID }}
+          AL_GIST_DESCRIPTION: ${{ vars.AL_GIST_DESCRIPTION }}
 
           EXCLUDE_LANG: ${{ vars.EXCLUDE_LANG }}

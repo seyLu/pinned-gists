@@ -4,7 +4,7 @@ import { type FileData, runLinguist } from './linguist-analyzer';
 import type { GetCommitContentsResponse } from './types/commit';
 import type { PushEvent } from './types/event';
 
-const { GH_TOKEN, GH_USERNAME, AL_GIST_ID, DAYS } = process.env;
+const { GH_TOKEN, GH_USERNAME, AL_GIST_ID, AL_GIST_DESCRIPTION, DAYS } = process.env;
 
 import { getExcludedExtensions } from './excluded-extensions';
 
@@ -108,14 +108,14 @@ const processCommits = (commits: GetCommitContentsResponse[]): FileData[] => {
     return result;
 };
 
-const updateGist = async (gistId: string, content: string) => {
+const updateGist = async (gistId: string, content: string, description?: string) => {
     const gist = await githubRequest('GET /gists/{gist_id}', {
         gist_id: gistId,
     });
     const filename = Object.keys(gist.data.files ?? {})[0];
     await githubRequest('PATCH /gists/{gist_id}', {
         gist_id: gistId,
-        description: '' || '⚡ Active Languages',
+        description: description || '⚡ Active Languages',
         files: {
             [filename]: {
                 filename: `seyLu's Recent Coding Languages`,
@@ -158,7 +158,7 @@ const main = async () => {
         console.log('\n');
 
         if (AL_GIST_ID) {
-            await updateGist(AL_GIST_ID, content);
+            await updateGist(AL_GIST_ID, content, AL_GIST_DESCRIPTION);
         } else {
             throw new Error('AL_GIST_ID is not provided.');
         }
