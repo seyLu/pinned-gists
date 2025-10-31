@@ -3,24 +3,26 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
 
-const { EXCLUDE } = process.env;
+const { EXCLUDE_LANG } = process.env;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const langsPath = path.join(__dirname, 'store/languages.yml');
+
+const defaultExcludeLang = 'Text,Markdown,HTML,YAML,JSON';
+const excludeLangs = [defaultExcludeLang, EXCLUDE_LANG].join(',');
 
 type LangDef = { extensions?: string[] };
 
-const excludeLang = ['Text,Markdown,HTML,YAML,JSON', EXCLUDE].join(',');
-
-export async function getExcludedExtensions(): Promise<Set<string>> {
+export const getExcludedExtensions = async (): Promise<Set<string>> => {
     const distinctExludeLang = new Set(
-        excludeLang
+        excludeLangs
             .split(',')
             .map((lang) => lang.trim())
             .filter(Boolean),
     );
 
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-
-    const yml = fs.readFileSync(path.join(__dirname, 'store/languages.yml'), 'utf8');
+    const yml = fs.readFileSync(langsPath, 'utf8');
     const langs = yaml.load(yml) as Record<string, LangDef>;
 
     const excludedExtensions = new Set<string>();
@@ -37,4 +39,4 @@ export async function getExcludedExtensions(): Promise<Set<string>> {
     }
 
     return excludedExtensions;
-}
+};

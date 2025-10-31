@@ -1,130 +1,63 @@
-import { Octokit } from '@octokit/rest';
-import type { GetResponseDataTypeFromEndpointMethod } from '@octokit/types';
-import { env } from './env.js';
+import { getExcludedLangs, getExcludedRepos } from './exclude';
+import { githubRequest } from './github-api-client';
+import { calculateTotalLanguages, createLanguageStats } from './language-stats';
+import type { GistDescription, GistID, GitHubUsername } from './types/env';
 
-const {
-    TL_GIST_ID,
-    TL_DESCRIPTION,
-    GH_TOKEN,
-    GH_USERNAME,
-    EXCLUDE_LANG,
-    EXCLUDE_REPO,
-} = env;
+const { GH_TOKEN, GH_USERNAME, TL_GIST_ID, TL_GIST_DESCRIPTION } = process.env;
 
-const octokit = new Octokit({
-    auth: `token ${GH_TOKEN}`,
-});
-
-type OctoRepo = GetResponseDataTypeFromEndpointMethod<
-    typeof octokit.repos.listForAuthenticatedUser
->[number];
-
-const truncate = (str: string, n: number) =>
-    str.length > n ? `${str.substring(0, n - 1)}…` : str;
-
-const generateStatsLines = async (
-    langTotal: Record<string, number>,
-): Promise<string[]> => {
-    const top5 = Object.entries(langTotal)
-        .filter(([lang]) => !EXCLUDE_LANG.includes(lang))
-        .sort((a, b) => b[1] - a[1]);
-
-    const totalCode = top5.reduce((acc, [_, num]) => acc + num, 0);
-
-    type LangPercentage = [language: string, percentage: number];
-    type LangBarData = [language: string, percentage: number, barCount: number];
-
-    const languagePercentages: LangPercentage[] = top5.map(([lang, codeLines]) => [
-        lang,
-        Math.round((codeLines / totalCode) * 10000) / 100,
-    ]);
-
-    const langBarData: LangBarData[] = languagePercentages.map(
-        ([language, percentage]) => [
-            language,
-            percentage,
-            Math.ceil((percentage * 36) / 100),
-        ],
-    );
-
-    const lines = langBarData.map(([language, percent, bars]) => {
-        const languageLabel = truncate(`${language} `, 12).padStart(12);
-        const barGraph = '█'.repeat(bars).padEnd(36, '░');
-        const percentageLabel = `${percent.toFixed(2)}%`.padStart(6);
-        return `${languageLabel}${barGraph} ${percentageLabel}`;
-    });
-
-    return lines;
+const validateEnv = (): void => {
+    if (!GH_TOKEN) throw new Error('GH_TOKEN is not provided.');
+    if (!GH_USERNAME) throw new Error('GH_USERNAME is not provided.');
+    if (!TL_GIST_ID) throw new Error('AL_GIST_ID is not provided.');
 };
 
-const getRepoLanguage = async (repo: OctoRepo) => {
-    if (repo.fork) return {};
-    const { data: languages } = await octokit.repos.listLanguages({
-        owner: GH_USERNAME,
-        repo: repo.name,
+const updateGist = async (
+    gistID: GistID,
+    content: string,
+    description?: GistDescription,
+) => {
+    const gist = await githubRequest('GET /gists/{gist_id}', {
+        gist_id: gistID,
     });
-    return languages;
-};
-
-const calculateTotalLanguages = async () => {
-    const { data: repos } = await octokit.repos.listForAuthenticatedUser({
-        type: 'owner',
-        per_page: 100,
-        sort: 'updated',
-        direction: 'desc',
-    });
-    const langTotal: Record<string, number> = {};
-    const reposTotalLanguages = await Promise.all(
-        repos
-            .filter((repo) => !EXCLUDE_REPO.includes(repo.full_name))
-            .map((repo) => getRepoLanguage(repo)),
-    );
-    reposTotalLanguages.forEach((lang) => {
-        const keys = Object.keys(lang);
-        keys.forEach((x) => {
-            if (langTotal[x]) langTotal[x] += lang[x];
-            else langTotal[x] = lang[x];
-        });
-    });
-    return langTotal;
-};
-
-const updateGist = async (lines: string) => {
-    let gist: Awaited<ReturnType<typeof octokit.gists.get>>['data'];
-    try {
-        gist = (await octokit.gists.get({ gist_id: TL_GIST_ID })).data;
-    } catch (error) {
-        throw new Error(`Unable to get gist\n${error}`);
-    }
-    const files = gist.files;
-    if (!files) throw new Error('No files found in the gist');
-    const filename = Object.keys(files)[0];
-    try {
-        await octokit.gists.update({
-            gist_id: TL_GIST_ID,
-            description: TL_DESCRIPTION || '💻 Dev Footprint',
-            files: {
-                [filename]: {
-                    content: lines,
-                },
+    const filename = Object.keys(gist.data.files ?? {})[0];
+    await githubRequest('PATCH /gists/{gist_id}', {
+        gist_id: gistID,
+        description: description || '💻 Dev Footprint',
+        files: {
+            [filename]: {
+                content,
             },
-        });
-    } catch (error) {
-        throw new Error(`Unable to update gist\n${error}`);
-    }
-    console.log('Gist updated successfully!');
+        },
+    });
+    console.log('Update succeeded.');
 };
 
-console.log('Calculating stats...');
-const totalLang = await calculateTotalLanguages();
-console.log('Total languages calculated');
-console.log('Generating stats...');
-const statsLine = (await generateStatsLines(totalLang)).join('\n');
-console.log('Generated stats:');
-console.log(statsLine);
-if (process.argv.includes('--dry')) {
-    console.log('Dry run, gist not updated');
-} else {
-    console.log('Updating gist...');
-    await updateGist(statsLine);
-}
+const main = async () => {
+    try {
+        validateEnv();
+
+        const username = GH_USERNAME as GitHubUsername;
+        console.log(`Username: ${username}`);
+
+        const excludedRepos = getExcludedRepos();
+        console.log('Calculating stats...');
+        const totalLang = await calculateTotalLanguages(username, excludedRepos);
+        console.log('Total languages calculated');
+
+        const excludedLangs = getExcludedLangs();
+        console.log('Generating stats...');
+        const statsLine = createLanguageStats(totalLang, excludedLangs);
+        console.log('Generated stats:');
+        console.log(statsLine);
+
+        const gistID = TL_GIST_ID as GistID;
+        const gistDescription = TL_GIST_DESCRIPTION as GistDescription;
+
+        await updateGist(gistID, statsLine, gistDescription);
+    } catch (e) {
+        console.error(e);
+        process.exitCode = 1;
+    }
+};
+
+main();

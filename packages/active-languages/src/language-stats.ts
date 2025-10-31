@@ -23,21 +23,11 @@ const formatNumber = (num: number): string => {
     return `${num}`;
 };
 
-const generateBarChart = (percent: number, size: number): string => {
-    const symbols = '░▏▎▍▌▋▊▉█';
-    const fractionComplete = Math.round((size * 8 * percent) / 100);
-    const fullBars = Math.floor(fractionComplete / 8);
+const generateBarChart = (percent: number, width: number): string => {
+    const filled = Math.round((percent / 100) * width);
+    const empty = width - filled;
 
-    if (fullBars >= size) {
-        return symbols[8].repeat(size);
-    }
-
-    const partialBar = fractionComplete % 8;
-    return (
-        symbols[8].repeat(fullBars) +
-        (partialBar > 0 ? symbols[partialBar] : '') +
-        symbols[0].repeat(Math.max(0, size - fullBars - (partialBar > 0 ? 1 : 0)))
-    );
+    return '█'.repeat(filled) + '░'.repeat(empty);
 };
 
 export const createLanguageStats = (languages: ProcessedLanguageStats[]): string => {

@@ -8,13 +8,13 @@
     "postbuild": "cp -r src/store dist",
     "start": "node dist/index.js"
   },
-  "devDependencies": {
-    "@octokit/types": "^16.0.0",
-    "@types/js-yaml": "^4.0.9"
-  },
   "dependencies": {
     "@octokit/request": "^10.0.6",
     "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@octokit/types": "^16.0.0",
+    "@types/js-yaml": "^4.0.9"
   },
   "packageManager": "pnpm@10.20.0"
 }

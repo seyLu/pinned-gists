@@ -31,14 +31,14 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Update
-        run: pnpm dlx github-lang-box@2
+      - run: pnpm tl:build
+      - run: pnpm tl:start
         env:
           GH_USERNAME: ${{ github.actor }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-          GIST_ID: ${{ vars.TL_GIST_ID }}
+          TL_GIST_ID: ${{ vars.TL_GIST_ID }}
+          TL_GIST_DESCRIPTION: ${{ vars.TL_GIST_DESCRIPTION }}
 
-          DESCRIPTION: ${{ vars.TL_GIST_DESCRIPTION }}
           EXCLUDE: ${{ vars.EXCLUDE_LANG }}
           EXCLUDE_REPO: ${{ vars.EXCLUDE_REPO }}

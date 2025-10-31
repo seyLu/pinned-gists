@@ -84,7 +84,7 @@ const createFileContent = (fileData: FileData): string => {
 
 export const runLinguist = async (
     files: FileData[],
-    excludeExt: Set<string>,
+    excludedExts: Set<string>,
 ): Promise<ProcessedLanguageStats[]> => {
     try {
         // Create temp linguist dir
@@ -96,7 +96,7 @@ export const runLinguist = async (
 
         // Prepare files
         const processFileData = files
-            .filter((file) => !excludeExt.has(path.extname(file.path)))
+            .filter((file) => !excludedExts.has(path.extname(file.path)))
             .map((file, index) => ({
                 ...file,
                 path: `${index}${path.extname(file.path)}`, // rename to avoid collisions

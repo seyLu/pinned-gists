@@ -1,21 +1,21 @@
+import { getExcludedExtensions } from './exclude';
 import { githubRequest } from './github-api-client';
 import { createLanguageStats } from './language-stats';
 import { type FileData, runLinguist } from './linguist-analyzer';
 import type { GetCommitContentsResponse } from './types/commit';
+import type { GistDescription, GistID, GitHubUsername } from './types/env';
 import type { PushEvent } from './types/event';
 
 const { GH_TOKEN, GH_USERNAME, AL_GIST_ID, AL_GIST_DESCRIPTION, DAYS } = process.env;
 
-import { getExcludedExtensions } from './excluded-extensions';
-
 const validateEnv = (): void => {
     if (!GH_TOKEN) throw new Error('GH_TOKEN is not provided.');
-    if (!AL_GIST_ID) throw new Error('AL_GIST_ID is not provided.');
     if (!GH_USERNAME) throw new Error('GH_USERNAME is not provided.');
+    if (!AL_GIST_ID) throw new Error('AL_GIST_ID is not provided.');
 };
 
 const fetchCommits = async (
-    username: string | null,
+    username: GitHubUsername,
     fromDate: Date,
 ): Promise<GetCommitContentsResponse[]> => {
     if (username === null) {
@@ -108,17 +108,20 @@ const processCommits = (commits: GetCommitContentsResponse[]): FileData[] => {
     return result;
 };
 
-const updateGist = async (gistId: string, content: string, description?: string) => {
+const updateGist = async (
+    gistID: GistID,
+    content: string,
+    description?: GistDescription,
+) => {
     const gist = await githubRequest('GET /gists/{gist_id}', {
-        gist_id: gistId,
+        gist_id: gistID,
     });
     const filename = Object.keys(gist.data.files ?? {})[0];
     await githubRequest('PATCH /gists/{gist_id}', {
-        gist_id: gistId,
+        gist_id: gistID,
         description: description || '⚡ Active Languages',
         files: {
             [filename]: {
-                filename: `seyLu's Recent Coding Languages`,
                 content,
             },
         },
@@ -130,13 +133,14 @@ const main = async () => {
     try {
         validateEnv();
 
-        const excludeExt = await getExcludedExtensions();
+        const excludedExts = await getExcludedExtensions();
 
-        const username = GH_USERNAME ?? null;
+        const username = GH_USERNAME as GitHubUsername;
+        console.log(`Username: ${username}`);
+
         const days = Math.max(1, Math.min(30, Number(DAYS || 14)));
         const fromDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
-        console.log(`Username: ${username}`);
         console.log(`Fetching data for the last ${days} days`);
 
         const commits = await fetchCommits(username, fromDate);
@@ -144,7 +148,7 @@ const main = async () => {
         console.log('\n');
 
         const files = processCommits(commits);
-        const langs = await runLinguist(files, excludeExt);
+        const langs = await runLinguist(files, excludedExts);
         console.log('\nLanguage statistics:');
         for (const lang of langs) {
             console.log(
@@ -157,11 +161,9 @@ const main = async () => {
         console.log(content);
         console.log('\n');
 
-        if (AL_GIST_ID) {
-            await updateGist(AL_GIST_ID, content, AL_GIST_DESCRIPTION);
-        } else {
-            throw new Error('AL_GIST_ID is not provided.');
-        }
+        const gistID = AL_GIST_ID as GistID;
+        const gistDescription = AL_GIST_DESCRIPTION as GistDescription;
+        await updateGist(gistID, content, gistDescription);
     } catch (e) {
         console.error(e);
         process.exitCode = 1;
