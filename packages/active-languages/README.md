@@ -14,7 +14,7 @@ This project analyzes your recent GitHub commits using the GitHub API and [Lingu
 
   1. Go to [https://gist.github.com/](https://gist.github.com/) and create a new public gist.
 
-  2. Name the file (e.g., "Recent Coding Languages") and add a description (e.g., "⚡ Active Languages").
+  2. Name the file (e.g., "active-languages.txt") and add a description (e.g., "⚡ Active Languages").
 
 ### 2. Generate a GitHub Token
 
