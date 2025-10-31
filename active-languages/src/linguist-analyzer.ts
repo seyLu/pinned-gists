@@ -87,13 +87,19 @@ export const runLinguist = async (
   excludeExt: Set<string>,
 ): Promise<ProcessedLanguageStats[]> => {
   try {
-    await runCommand('git checkout --orphan temp && git rm -rf . && rm -rf *');
+    // Create temp linguist dir
+    const tmp = './.linguist_tmp';
 
+    await runCommand(`rm -rf ${tmp}`);
+    await runCommand(`mkdir ${tmp}`);
+    await runCommand(`git -C ${tmp} init`);
+
+    // Prepare files
     const processFileData = files
       .filter((file) => !excludeExt.has(path.extname(file.path)))
       .map((file, index) => ({
         ...file,
-        path: `${index}${path.extname(file.path)}`,
+        path: `${index}${path.extname(file.path)}`, // rename to avoid collisions
       }));
 
     const pathFileMap = processFileData.reduce<Record<string, FileData>>(
@@ -104,19 +110,22 @@ export const runLinguist = async (
       {},
     );
 
+    // Write synthetic files inside tmp repo
     await Promise.all([
-      ...processFileData.map((file) => writeFile(file.path, createFileContent(file))),
-      await runCommandWithRetry('echo "*.* linguist-detectable" > .gitattributes'),
-      await runCommandWithRetry(
-        'git config user.name "dummy" && git config user.email "dummy@github.com"',
+      ...processFileData.map((file) =>
+        writeFile(`${tmp}/${file.path}`, createFileContent(file)),
       ),
+      runCommand(`echo "*.* linguist-detectable" > ${tmp}/.gitattributes`),
+      runCommand(`git -C ${tmp} config user.name "dummy"`),
+      runCommand(`git -C ${tmp} config user.email "dummy@github.com"`),
     ]);
 
-    // Add files to git
-    await runCommand('git add . && git commit -m "dummy"');
+    // Git add + commit in tmp repo
+    await runCommand(`git -C ${tmp} add .`);
+    await runCommand(`git -C ${tmp} commit -m "dummy"`);
 
-    // Run github-linguist
-    const stdout = await runCommand('github-linguist --breakdown --json');
+    // Run Linguist on isolated repo
+    const stdout = await runCommand(`github-linguist --breakdown --json --path ${tmp}`);
     const linguistResult = JSON.parse(stdout) as LinguistResult;
 
     // Process the language stats
