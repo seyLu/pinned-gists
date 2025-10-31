@@ -1,5 +1,5 @@
 <div align="center">
-    <img height=150 src="./pinned-gists.svg" alt="pinned-gists icon">
+    <img height=100 src="./pinned-gists.svg" alt="pinned-gists icon">
     <h1>pinned-gists</h1>
     <p>A collection of GitHub Stats pinned gists.</p>
     <p>
@@ -22,10 +22,10 @@
 ### Pinned Gists:
 
 #### [active-languages](https://github.com/seyLu/pinned-gists/blob/main/packages/active-languages/README.md)
-<img height=250 src="./packages/active-languages/active-languages.svg" alt="active-languages icon">
+<img height=200 src="./packages/active-languages/active-languages.svg" alt="active-languages icon">
 
 #### [total-languages](https://github.com/seyLu/pinned-gists/blob/main/packages/total-languages/README.md)
-<img height=250 src="./packages/total-languages/total-languages.svg" alt="total-languages icon">
+<img height=200 src="./packages/total-languages/total-languages.svg" alt="total-languages icon">
 
 <br>
 
