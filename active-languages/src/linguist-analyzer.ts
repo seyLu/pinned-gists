@@ -115,9 +115,9 @@ export const runLinguist = async (
       ...processFileData.map((file) =>
         writeFile(`${tmp}/${file.path}`, createFileContent(file)),
       ),
-      runCommand(`echo "*.* linguist-detectable" > ${tmp}/.gitattributes`),
-      runCommand(`git -C ${tmp} config user.name "dummy"`),
-      runCommand(`git -C ${tmp} config user.email "dummy@github.com"`),
+      runCommandWithRetry(`echo "*.* linguist-detectable" > ${tmp}/.gitattributes`),
+      runCommandWithRetry(`git -C ${tmp} config user.name "dummy"`),
+      runCommandWithRetry(`git -C ${tmp} config user.email "dummy@github.com"`),
     ]);
 
     // Git add + commit in tmp repo
@@ -125,7 +125,7 @@ export const runLinguist = async (
     await runCommand(`git -C ${tmp} commit -m "dummy"`);
 
     // Run Linguist on isolated repo
-    const stdout = await runCommand(`github-linguist --breakdown --json --path ${tmp}`);
+    const stdout = await runCommand(`cd ${tmp} && github-linguist --breakdown --json`);
     const linguistResult = JSON.parse(stdout) as LinguistResult;
 
     // Process the language stats
