@@ -23,12 +23,16 @@ const formatNumber = (num: number): string => {
     return `${num}`;
 };
 
-const generateBarChart = (percent: number, width: number): string => {
-    const filled = Math.round((percent / 100) * width);
+export function generateBarChart(percent: number, width = 36): string {
+    let filled = Math.round((percent / 100) * width);
+
+    if (percent > 0 && filled === 0) filled = 1;
+
+    filled = Math.min(filled, width);
     const empty = width - filled;
 
     return '█'.repeat(filled) + '░'.repeat(empty);
-};
+}
 
 export const createLanguageStats = (languages: ProcessedLanguageStats[]): string => {
     return languages
