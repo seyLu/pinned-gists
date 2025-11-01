@@ -1,7 +1,7 @@
 <div align="center">
     <img height=100 src="./pinned-gists.svg" alt="pinned-gists icon">
     <h1>pinned-gists</h1>
-    <p>A collection of GitHub Stats pinned gists.</p>
+    <p>Automatically generate GitHub stats and pin them as dynamic gists.</p>
     <p>
         <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"></img></a>
         <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Vitest-%236E9F18?style=for-the-badge&logo=Vitest&logoColor=%23fcd703" alt="Vitest"></img></a>
@@ -35,11 +35,13 @@
 pnpm i
 ```
 
-#### 2. Supply .env values
+#### 2. Create .env file
 
 ```bash
 cp .env.example .env
 ```
+
+Edit `.env` with your values
 
 ```env
 GH_USERNAME=xxx
@@ -58,42 +60,38 @@ EXCLUDE_REPO=xxx
 ```
 
 
-#### 2. Run dev script of a specific package
+#### 3. Run a package in dev mode
 
 ```bash
 pnpm al:dev
 # will run dev script of 'active-languages' package
+
 ```
 
 <br>
 
-### GitHub Actions
-Prefix
-- AL (active-languages)
-- TL (total-languages)
+### GitHub Action Setup
 
-#### Repository Environment Secret:
-
-> *Required*
+#### Required Repository Secret:
 
 | Variable       | Description                                                                                               |
 | -------------- | --------------------------------------------------------------------------------------------------------- |
 | GH_TOKEN       | GitHub access token with `gist` and `metadata:read` scopes                                                |
 
-#### Repository Environment Variable:
-
-> *Required*
+#### Required Repository Variables:
 
 | Variable       | Description                                                                                               |
 | -------------- | --------------------------------------------------------------------------------------------------------- |
-| AL_GIST_ID     | The ID from your gist URL: `https://gist.github.com/<username>/<gist-id>`                                    |
-| TL_GIST_ID     | The ID from your gist URL: `https://gist.github.com/<username>/<gist-id>`                                    |
+| AL_GIST_ID     | Gist ID for active-languages                                                                              |
+| TL_GIST_ID     | Gist ID for total-languages                                                                               |
 
-> *Optional*
+*`https://gist.github.com/<username>/<gist-id>`*
+
+#### Optional Repository Variables:
 
 | Variable       | Description                                                                                               |
 | ------------   | --------------------------------------------------------------------------------------------------------- |
-| EXCLUDE_LANG   | Comma-separated list of languages to exclude <br> Example: `Jupyter Notebook,CSS,TeX,PHP`                 |
-| EXCLUDE_REPO   | Comma-separated list of repositories to exclude <br> Example: `repo1,repo2`                               |
-| AL_DESCRIPTION | Custom description for the gist                                                         |
-| TL_DESCRIPTION | Custom description for the gist                                                                           |
+| EXCLUDE_LANG   | Comma-separated list of languages to exclude. Example: `Jupyter Notebook,CSS,TeX,PHP`                     |
+| EXCLUDE_REPO   | Comma-separated list of repositories to exclude. Example: `repo1,repo2`                                   |
+| AL_DESCRIPTION | Custom gist description for active-languages                                                              |
+| TL_DESCRIPTION | Custom gist description for total-languages                                                               |
