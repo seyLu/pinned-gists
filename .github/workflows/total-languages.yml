@@ -38,5 +38,5 @@ jobs:
           TL_GIST_ID: ${{ vars.TL_GIST_ID }}
           TL_GIST_DESCRIPTION: ${{ vars.TL_GIST_DESCRIPTION }}
 
-          EXCLUDE: ${{ vars.EXCLUDE_LANG }}
+          EXCLUDE_LANG: ${{ vars.EXCLUDE_LANG }}
           EXCLUDE_REPO: ${{ vars.EXCLUDE_REPO }}

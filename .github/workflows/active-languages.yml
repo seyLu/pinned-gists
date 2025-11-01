@@ -49,3 +49,4 @@ jobs:
           AL_GIST_DESCRIPTION: ${{ vars.AL_GIST_DESCRIPTION }}
 
           EXCLUDE_LANG: ${{ vars.EXCLUDE_LANG }}
+          EXCLUDE_REPO: ${{ vars.EXCLUDE_REPO }}

@@ -3,20 +3,22 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
 
-const { EXCLUDE_LANG } = process.env;
+const { EXCLUDE_LANG, EXCLUDE_REPO } = process.env;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const langsPath = path.join(__dirname, 'store/languages.yml');
 
-const defaultExcludeLang = 'Text,Markdown,HTML,YAML,JSON';
-const excludeLangs = [defaultExcludeLang, EXCLUDE_LANG].join(',');
+const defaultExcludedLang = 'Text,Markdown,HTML,YAML,JSON';
+const excludedLangs = [defaultExcludedLang, EXCLUDE_LANG].join(',');
+
+const excludedRepos = new Set([...(EXCLUDE_REPO?.split(',') ?? [])]);
 
 type LangDef = { extensions?: string[] };
 
 export const getExcludedExtensions = async (): Promise<Set<string>> => {
-    const distinctExludeLang = new Set(
-        excludeLangs
+    const distinctExludedLang = new Set(
+        excludedLangs
             .split(',')
             .map((lang) => lang.trim())
             .filter(Boolean),
@@ -28,7 +30,7 @@ export const getExcludedExtensions = async (): Promise<Set<string>> => {
     const excludedExtensions = new Set<string>();
 
     for (const [langName, def] of Object.entries(langs)) {
-        if (!distinctExludeLang.has(langName)) continue;
+        if (!distinctExludedLang.has(langName)) continue;
         if (!def.extensions) continue;
 
         for (const ext of def.extensions) {
@@ -39,4 +41,8 @@ export const getExcludedExtensions = async (): Promise<Set<string>> => {
     }
 
     return excludedExtensions;
+};
+
+export const getExcludedRepos = (): Set<string> => {
+    return excludedRepos;
 };

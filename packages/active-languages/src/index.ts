@@ -1,4 +1,4 @@
-import { getExcludedExtensions } from './exclude';
+import { getExcludedExtensions, getExcludedRepos } from './exclude';
 import { githubRequest } from './github-api-client';
 import { createLanguageStats } from './language-stats';
 import { type FileData, runLinguist } from './linguist-analyzer';
@@ -17,6 +17,7 @@ const validateEnv = (): void => {
 const fetchCommits = async (
     username: GitHubUsername,
     fromDate: Date,
+    excludedRepos: Set<string>,
 ): Promise<GetCommitContentsResponse[]> => {
     if (username === null) {
         throw new Error('GH_USERNAME is not provided.');
@@ -33,9 +34,11 @@ const fetchCommits = async (
             per_page: perPage,
             page,
         });
-        const pushEvents = events.data.filter(
-            (event): event is PushEvent => event.type === 'PushEvent',
-        );
+        const pushEvents = events.data.filter((event): event is PushEvent => {
+            if (event.type !== 'PushEvent') return false;
+            const [, repoName] = event.repo.name.split('/');
+            return !excludedRepos.has(repoName);
+        });
 
         const recentPushEvents = pushEvents.filter(
             ({ created_at }) => new Date(created_at) > fromDate,
@@ -143,7 +146,8 @@ const main = async () => {
 
         console.log(`Fetching data for the last ${days} days`);
 
-        const commits = await fetchCommits(username, fromDate);
+        const excludedRepos = getExcludedRepos();
+        const commits = await fetchCommits(username, fromDate, excludedRepos);
         console.log(`${commits.length} commits fetched.`);
         console.log('\n');
 
