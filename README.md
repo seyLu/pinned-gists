@@ -27,6 +27,28 @@
 
 <br>
 
+### GitHub Fine-Grained Token Permissions
+
+#### Public repositories only
+
+Use these permissions if you only want to generate stats from public repositories:
+
+| Category     | Permission | Access       | Purpose                              |
+| ------------ | ---------- | ------------ | ------------------------------------ |
+| Repositories | Metadata   | Read-only    | Read public repository language data |
+| Account      | Gists      | Read & Write | Update the pinned gists              |
+
+#### Including private repositories
+
+Add these if you also want private repository activity included:
+
+| Category     | Permission | Access    | Purpose                                             |
+| ------------ | ---------- | --------- | --------------------------------------------------- |
+| Repositories | Contents   | Read-only | Access private repo file data for language analysis |
+| Account      | Events     | Read-only | Access private contribution activity                |
+
+<br>
+
 ### Developing locally
 
 #### 1. Install dependencies
