@@ -27,7 +27,7 @@
 
 <br>
 
-<div id="#fine-grained-token"></div>
+<div id="fine-grained-token"></div>
 
 ### GitHub Fine-Grained Token Permissions
 
