@@ -2,7 +2,7 @@
     <img height=200 src="./active-languages.svg" alt="active-languages icon">
     <h1>active-languages</h1>
     <p>Displays the most recently used programming languages based on your GitHub activity.</p>
-    <p>This package is part of the `pinned-gists` pnpm monorepo.</p>
+    <p>This package is part of the <pre>pinned-gists</pre> pnpm monorepo.</p>
     <p>
         <a href="https://github.com/seyLu/pinned-gists/issues/new">Report Bug</a>
         ·
@@ -60,10 +60,6 @@ GH_TOKEN=xxx
 AL_GIST_ID=xxx
 AL_GIST_DESCRIPTION=⚡ Active Languages
 
-# total-languages
-TL_GIST_ID=xxx
-TL_GIST_DESCRIPTION=💻 Dev Footprint
-
 EXCLUDE_LANG=Text,Markdown,HTML,YAML,JSON
 EXCLUDE_REPO=xxx
 ```
@@ -112,8 +108,6 @@ pnpm al:dev
 3. Add a filename (e.g., active-languages.txt)
 4. Copy the gist ID from the URL (<gist-id>)
 
-<br>
-
 ### Pin to profile
 1. Follow GitHub’s instructions: [Pinning items to your profile](https://docs.github.com/en/account-and-profile/customizing-your-profile/pinning-items-to-your-profile)
 
@@ -122,6 +116,8 @@ pnpm al:dev
 ### Notes
 - This script runs as part of the monorepo workflow
 - Execute commands from the repository root
+
+<br>
 
 ### Credits
 - Inspired by [liby/recent-languages-box](https://github.com/liby/recent-languages-box) with significant improvements and customization.
