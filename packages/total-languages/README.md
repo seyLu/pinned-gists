@@ -14,6 +14,8 @@
 
 <br>
 
+<div id="fine-grained-token"></div>
+
 ### GitHub Fine-Grained Token Permissions
 
 #### Public & Private repositories
@@ -69,14 +71,14 @@ pnpm tl:dev
 
 #### Required Repository Secret:
 
-| Name     | Description                                |
-| -------- | ------------------------------------------ |
-| GH_TOKEN | GitHub token with permissions listed above |
+| Variable       | Description                                                                                               |
+| -------------- | --------------------------------------------------------------------------------------------------------- |
+| GH_TOKEN       | GitHub access token with [fine-grained token permissions](#fine-grained-token)                            |
 
 #### Required Repository Variables:
 
-| Name       | Description                  |
-| ---------- | ---------------------------- |
+| Variable   | Description                 |
+| ---------- | --------------------------- |
 | TL_GIST_ID | Gist ID for total-languages |
 
 *`https://gist.github.com/<username>/<gist-id>`*
