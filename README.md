@@ -27,6 +27,8 @@
 
 <br>
 
+<div id="#fine-grained-token"></div>
+
 ### GitHub Fine-Grained Token Permissions
 
 #### Public repositories only
@@ -98,7 +100,7 @@ pnpm al:dev
 
 | Variable       | Description                                                                                               |
 | -------------- | --------------------------------------------------------------------------------------------------------- |
-| GH_TOKEN       | GitHub access token with `gist` and `metadata:read` scopes                                                |
+| GH_TOKEN       | GitHub access token with [fine-grained token permissions](#fine-grained-token).                           |
 
 #### Required Repository Variables:
 
