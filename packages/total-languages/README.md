@@ -27,6 +27,9 @@
 
 ### Developing locally
 
+> [!NOTE]
+> This package is part of a monorepo. Run all commands from the repository root.
+
 #### 1. Install dependencies
 
 ```bash
@@ -53,7 +56,7 @@ EXCLUDE_LANG=Text,Markdown,HTML,YAML,JSON
 EXCLUDE_REPO=xxx
 ```
 
-#### 3. Run from the monorepo root
+#### 3. Run in dev mode
 
 ```bash
 pnpm tl:dev
@@ -98,12 +101,6 @@ pnpm tl:dev
 
 ### Pin to profile
 1. Follow GitHub’s instructions: [Pinning items to your profile](https://docs.github.com/en/account-and-profile/customizing-your-profile/pinning-items-to-your-profile)
-
-<br>
-
-### Notes
-- This script runs as part of the monorepo workflow
-- Execute commands from the repository root
 
 <br>
 

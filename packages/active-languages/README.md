@@ -38,6 +38,9 @@ Add these if you also want private repository activity included:
 
 ### Developing locally
 
+> [!NOTE]
+> This package is part of a monorepo. Run all commands from the repository root.
+
 #### 1. Install dependencies
 
 ```bash
@@ -65,7 +68,7 @@ EXCLUDE_REPO=xxx
 ```
 
 
-#### 3. Run from the monorepo root
+#### 3. Run in dev mode
 
 ```bash
 pnpm al:dev
@@ -113,11 +116,6 @@ pnpm al:dev
 
 <br>
 
-### Notes
-- This script runs as part of the monorepo workflow
-- Execute commands from the repository root
-
-<br>
 
 ### Credits
 - Inspired by [liby/recent-languages-box](https://github.com/liby/recent-languages-box) with significant improvements and customization.
