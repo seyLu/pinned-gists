@@ -100,7 +100,7 @@ pnpm al:dev
 
 | Variable       | Description                                                                                               |
 | -------------- | --------------------------------------------------------------------------------------------------------- |
-| GH_TOKEN       | GitHub access token with [fine-grained token permissions](#fine-grained-token).                           |
+| GH_TOKEN       | GitHub access token with [fine-grained token permissions](#fine-grained-token)                            |
 
 #### Required Repository Variables:
 
@@ -119,3 +119,5 @@ pnpm al:dev
 | EXCLUDE_REPO   | Comma-separated list of repositories to exclude. Example: `repo1,repo2`                                   |
 | AL_DESCRIPTION | Custom gist description for active-languages                                                              |
 | TL_DESCRIPTION | Custom gist description for total-languages                                                               |
+
+*See [languages.yml](https://raw.githubusercontent.com/github/linguist/main/lib/linguist/languages.yml) for supported languages*
