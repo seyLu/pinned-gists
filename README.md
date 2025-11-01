@@ -89,7 +89,6 @@ EXCLUDE_REPO=xxx
 ```bash
 pnpm al:dev
 # will run dev script of 'active-languages' package
-
 ```
 
 <br>
@@ -121,3 +120,14 @@ pnpm al:dev
 | TL_DESCRIPTION | Custom gist description for total-languages                                                               |
 
 *See [languages.yml](https://raw.githubusercontent.com/github/linguist/main/lib/linguist/languages.yml) for supported languages*
+
+### Create a gist
+1. Visit https://gist.github.com
+2. Create a new public gist
+3. Add a filename (e.g., active-languages.txt)
+4. Copy the gist ID from the URL (<gist-id>)
+
+<br>
+
+### Pin to profile
+1. Follow GitHub’s instructions: [Pinning items to your profile](https://docs.github.com/en/account-and-profile/customizing-your-profile/pinning-items-to-your-profile)

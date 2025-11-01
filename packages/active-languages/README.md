@@ -1,78 +1,127 @@
-# Active Langugages
+<div align="center">
+    <img height=200 src="./active-languages.svg" alt="active-languages icon">
+    <h1>active-languages</h1>
+    <p>Displays the most recently used programming languages based on your GitHub activity.</p>
+    <p>This package is part of the `pinned-gists` pnpm monorepo.</p>
+    <p>
+        <a href="https://github.com/seyLu/pinned-gists/issues/new">Report Bug</a>
+        ·
+        <a href="https://github.com/seyLu/pinned-gists/issues/new">Request Feature</a>
+        ·
+        <a href="https://github.com/seyLu/pinned-gists/discussions">Ask Question</a>
+    </p>
+</div>
 
-This project analyzes your recent GitHub commits using the GitHub API and [Linguist](https://github.com/github-linguist/linguist) to display the percentage of each programming language used. It also calculates the number of lines added/removed per language.
+<br>
+
+### GitHub Fine-Grained Token Permissions
+
+#### Public repositories only
+
+Use these permissions if you only want to generate stats from public repositories:
+
+| Category     | Permission | Access       | Purpose                              |
+| ------------ | ---------- | ------------ | ------------------------------------ |
+| Repositories | Metadata   | Read-only    | Read public repository language data |
+| Account      | Gists      | Read & Write | Update the pinned gists              |
+
+#### Including private repositories
+
+Add these if you also want private repository activity included:
+
+| Category     | Permission | Access    | Purpose                                             |
+| ------------ | ---------- | --------- | --------------------------------------------------- |
+| Repositories | Contents   | Read-only | Access private repo file data for language analysis |
+| Account      | Events     | Read-only | Access private contribution activity                |
+
+<br>
+
+### Developing locally
+
+#### 1. Install dependencies
+
+```bash
+pnpm i
+```
+
+#### 2. Create .env file
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your values
+
+```env
+GH_USERNAME=xxx
+GH_TOKEN=xxx
+
+# active-languages
+AL_GIST_ID=xxx
+AL_GIST_DESCRIPTION=⚡ Active Languages
+
+# total-languages
+TL_GIST_ID=xxx
+TL_GIST_DESCRIPTION=💻 Dev Footprint
+
+EXCLUDE_LANG=Text,Markdown,HTML,YAML,JSON
+EXCLUDE_REPO=xxx
+```
 
 
-## Setup Guide
+#### 3. Run from the monorepo root
 
-**Environment Variables:**
+```bash
+pnpm al:dev
+# will run dev script of 'active-languages' package
+```
 
-> *Required*
+<br>
 
-| Variable       | Description                                                                                               |
-| -------------- | --------------------------------------------------------------------------------------------------------- |
-| GH_TOKEN       | GitHub access token with `gist` and `metadata:read` scopes                                                |
-| AL_GIST_ID     | The ID from your gist URL: `https://gist.github.com/<username>/8357a43db37b23493f8cc80ac0e1e412` |
+### Github Action Setup
 
-> *Optional*
+#### Required Repository Secret:
+
+| Name     | Description                                |
+| -------- | ------------------------------------------ |
+| GH_TOKEN | GitHub token with permissions listed above |
+
+#### Required Repository Variables:
+
+| Name       | Description                  |
+| ---------- | ---------------------------- |
+| AL_GIST_ID | Gist ID for active-languages |
+
+*`https://gist.github.com/<username>/<gist-id>`*
+
+#### Optional Repository Variables:
 
 | Variable       | Description                                                                                               |
 | ------------   | --------------------------------------------------------------------------------------------------------- |
-| EXCLUDE_LANG   | Comma-separated list of languages to exclude <br> Example: `Jupyter Notebook,CSS,TeX,PHP`                 |
-| EXCLUDE_REPO   | Comma-separated list of repositories to exclude <br> Example: `username/repo1,username/repo2`             |
-| AL_DESCRIPTION | Custom description for the gist                                                                           |
+| EXCLUDE_LANG   | Comma-separated list of languages to exclude. Example: `Jupyter Notebook,CSS,TeX,PHP`                     |
+| EXCLUDE_REPO   | Comma-separated list of repositories to exclude. Example: `repo1,repo2`                                   |
+| AL_DESCRIPTION | Custom gist description for active-languages                                                              |
 
-### 1. Create a GitHub Gist
+*See [languages.yml](https://raw.githubusercontent.com/github/linguist/main/lib/linguist/languages.yml) for supported languages*
 
-  1. Go to [https://gist.github.com/](https://gist.github.com/) and create a new public gist.
+<br>
 
-  2. Name the file (e.g., "active-languages.txt") and add a description (e.g., "⚡ Active Languages").
+### Create a gist
+1. Visit https://gist.github.com
+2. Create a new public gist
+3. Add a filename (e.g., active-languages.txt)
+4. Copy the gist ID from the URL (<gist-id>)
 
-### 2. Generate a GitHub Token
+<br>
 
-  1. [Create a new Personal Access Token](https://github.com/settings/personal-access-tokens/new)
+### Pin to profile
+1. Follow GitHub’s instructions: [Pinning items to your profile](https://docs.github.com/en/account-and-profile/customizing-your-profile/pinning-items-to-your-profile)
 
-  2. Configure repository access:
+<br>
 
-     - For public repositories：Select **"Public Repositories (read-only)"**
+### Notes
+- This script runs as part of the monorepo workflow
+- Execute commands from the repository root
 
-     - For all repositories: Select **"All repositories"**
-
-     - For specific repositories:
-
-       1. Choose **"Only select repositories"**
-
-       2. Select the desired repositories from the list
-
-  3. Configure permissions:
-
-     - Repository permissions > Metadata: Read-only
-
-        - When selecting **"Public Repositories (read-only)"** no configuration is required.
-
-     - Account permissions > Gists: Read and write
-
-  3. Generate and copy the token for use in the next steps.
-
-      Note: Ensure you save the token securely, as it won't be displayed again.
-
-### 3. Set Up the Project
-  1. Fork this repository.
-
-  2. Ensure GitHub Actions are enabled for your repository.
-
-  3. Go to repository **Settings** > **Security** > **Actions secrets and variables** > **Secrets**, add the following environment variables:
-
-      - `GH_TOKEN`: The GitHub token generated above.
-
-  4. Go to repository **Settings** > **Security** > **Actions secrets and variables** > **Variables**, add the following environment variables:
-
-      - `AL_GIST_ID`: The ID of your gist (e.g., `8357a43db37b23493f8cc80ac0e1e412` from https://gist.github.com/seyLu/8357a43db37b23493f8cc80ac0e1e412)
-
-### 4. Pin the Gist to Your Profile
-
-Follow GitHub's guide on [pinning items to your profile](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/pinning-items-to-your-profile) to display your language stats.
-
-## Credits
-
-- Built on top of [liby/recent-languages-box](https://github.com/liby/recent-languages-box) with tons of improvements and changes
+### Credits
+- Inspired by [liby/recent-languages-box](https://github.com/liby/recent-languages-box) with significant improvements and customization.
