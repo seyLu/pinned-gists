@@ -2,7 +2,7 @@
     <img height=200 src="./total-languages.svg" alt="total-languages icon">
     <h1>total-languages</h1>
     <p>Displays all programming languages used across your GitHub repositories.</p>
-    <p>This package is part of the <pre>pinned-gists</pre> pnpm monorepo.</p>
+    <p>This package is part of the `pinned-gists` pnpm monorepo.</p>
     <p>
         <a href="https://github.com/seyLu/pinned-gists/issues/new">Report Bug</a>
         ·

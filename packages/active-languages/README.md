@@ -2,7 +2,7 @@
     <img height=200 src="./active-languages.svg" alt="active-languages icon">
     <h1>active-languages</h1>
     <p>Displays the most recently used programming languages based on your GitHub activity.</p>
-    <p>This package is part of the <pre>pinned-gists</pre> pnpm monorepo.</p>
+    <p>This package is part of the `pinned-gists` pnpm monorepo.</p>
     <p>
         <a href="https://github.com/seyLu/pinned-gists/issues/new">Report Bug</a>
         ·
