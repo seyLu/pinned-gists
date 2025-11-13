@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const langsPath = path.join(__dirname, 'store/languages.yml');
 
-const defaultExcludedLang = 'Text,Markdown,HTML,YAML,JSON';
+const defaultExcludedLang = 'Text,Markdown,HTML,SVG,YAML,TOML,JSON';
 const excludedLangs = [defaultExcludedLang, EXCLUDE_LANG].join(',');
 
 const excludedRepos = new Set([...(EXCLUDE_REPO?.split(',') ?? [])]);

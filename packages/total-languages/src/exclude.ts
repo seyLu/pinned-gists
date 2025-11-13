@@ -1,6 +1,6 @@
 const { EXCLUDE_LANG, EXCLUDE_REPO } = process.env;
 
-const defaultExcludedLang = 'Text,Markdown,HTML,YAML,JSON';
+const defaultExcludedLang = 'Text,Markdown,HTML,SVG,YAML,TOML,JSON';
 
 const excludedLangs = new Set([
     ...defaultExcludedLang.split(','),
