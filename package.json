@@ -16,11 +16,11 @@
     "tl:start": "dotenv -e .env -- pnpm --filter total-languages start"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.2",
-    "@types/node": "^24.9.2",
+    "@biomejs/biome": "^2.3.5",
+    "@types/node": "^24.10.1",
     "dotenv-cli": "^11.0.0",
-    "lefthook": "^2.0.2",
-    "tsup": "^8.5.0",
+    "lefthook": "^2.0.3",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vite-node": "^3.2.4"
   },
