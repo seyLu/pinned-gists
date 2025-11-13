@@ -56,16 +56,6 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
 
-  packages/proj:
-    dependencies:
-      '@octokit/request':
-        specifier: ^10.0.6
-        version: 10.0.6
-    devDependencies:
-      '@octokit/types':
-        specifier: ^16.0.0
-        version: 16.0.0
-
   packages/total-languages:
     dependencies:
       '@octokit/request':
