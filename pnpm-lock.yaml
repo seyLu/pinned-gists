@@ -36,8 +36,8 @@ importers:
         specifier: ^10.0.6
         version: 10.0.6
       js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.1.1
+        version: 4.1.1
     devDependencies:
       '@octokit/types':
         specifier: ^16.0.0
@@ -45,16 +45,6 @@ importers:
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
-
-  packages/dist:
-    dependencies:
-      '@octokit/request':
-        specifier: ^10.0.6
-        version: 10.0.6
-    devDependencies:
-      '@octokit/types':
-        specifier: ^16.0.0
-        version: 16.0.0
 
   packages/total-languages:
     dependencies:
@@ -753,8 +743,8 @@ packages:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
 
-  js-yaml@4.1.0:
-    resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
+  js-yaml@4.1.1:
+    resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
 
   lefthook-darwin-arm64@2.0.3:
@@ -1574,7 +1564,7 @@ snapshots:
 
   joycon@3.1.1: {}
 
-  js-yaml@4.1.0:
+  js-yaml@4.1.1:
     dependencies:
       argparse: 2.0.1
 
