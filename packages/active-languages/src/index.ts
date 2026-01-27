@@ -4,7 +4,6 @@ import { createLanguageStats } from './language-stats';
 import { type FileData, runLinguist } from './linguist-analyzer';
 import type { GetCommitContentsResponse } from './types/commit';
 import type { GistDescription, GistID, GitHubUsername } from './types/env';
-import type { PushEvent } from './types/event';
 
 const { GH_TOKEN, GH_USERNAME, AL_GIST_ID, AL_GIST_DESCRIPTION, DAYS } = process.env;
 
@@ -19,72 +18,63 @@ const fetchCommits = async (
     fromDate: Date,
     excludedRepos: Set<string>,
 ): Promise<GetCommitContentsResponse[]> => {
-    if (username === null) {
-        throw new Error('GH_USERNAME is not provided.');
-    }
+    console.log(`Fetching repositories for ${username}...`);
 
-    const maxEvents = 300;
-    const perPage = 100;
-    const pages = Math.ceil(maxEvents / perPage);
+    const repos = await githubRequest('GET /user/repos', {
+        affiliation: 'owner',
+        sort: 'updated',
+        direction: 'desc',
+        per_page: 100,
+    });
+
     const commits: GetCommitContentsResponse[] = [];
 
-    for (let page = 1; page <= pages; page++) {
-        const events = await githubRequest('GET /users/{username}/events', {
-            username,
-            per_page: perPage,
-            page,
-        });
-        const pushEvents = events.data.filter((event): event is PushEvent => {
-            if (event.type !== 'PushEvent') return false;
-            const [, repoName] = event.repo.name.split('/');
-            return !excludedRepos.has(repoName);
-        });
+    const activeRepos = repos.data.filter((repo) => {
+        if (excludedRepos.has(repo.name)) return false;
 
-        const recentPushEvents = pushEvents.filter(
-            ({ created_at }) => new Date(created_at) > fromDate,
-        );
-        console.log(`${recentPushEvents.length} events fetched.`);
+        const pushedDate = new Date(repo.pushed_at ?? 0);
+        return pushedDate > fromDate;
+    });
 
-        const newCommits = await Promise.allSettled(
-            recentPushEvents.flatMap(({ repo, payload }) => {
-                const [owner, repoName] = repo.name.split('/');
+    console.log(
+        `Found ${activeRepos.length} repositories active since ${fromDate.toISOString()}`,
+    );
 
-                if (payload.commits && Array.isArray(payload.commits)) {
-                    return payload.commits
-                        .filter((commit) => commit.distinct)
-                        .map((commit) =>
-                            githubRequest('GET /repos/{owner}/{repo}/commits/{ref}', {
-                                owner,
-                                repo: repoName,
-                                ref: commit.sha,
-                            }),
-                        );
-                }
+    for (const repo of activeRepos) {
+        console.log(`Checking commits in ${repo.name}...`);
 
-                if (payload.head) {
-                    return [
-                        githubRequest('GET /repos/{owner}/{repo}/commits/{ref}', {
-                            owner,
-                            repo: repoName,
-                            ref: payload.head,
-                        }),
-                    ];
-                }
+        try {
+            const repoCommits = await githubRequest(
+                'GET /repos/{owner}/{repo}/commits',
+                {
+                    owner: repo.owner.login,
+                    repo: repo.name,
+                    since: fromDate.toISOString(),
+                    author: username,
+                    per_page: 100,
+                },
+            );
 
-                return [];
-            }),
-        );
+            if (repoCommits.data.length > 0) {
+                console.log(
+                    `   > Found ${repoCommits.data.length} commits in ${repo.name}`,
+                );
 
-        commits.push(
-            ...newCommits
-                .filter((result) => result.status === 'fulfilled')
-                .map((result) => {
-                    return result.value.data;
-                }),
-        );
+                const commitDetailsPromises = repoCommits.data.map((commit) =>
+                    githubRequest('GET /repos/{owner}/{repo}/commits/{ref}', {
+                        owner: repo.owner.login,
+                        repo: repo.name,
+                        ref: commit.sha,
+                    }).then((res) => res.data),
+                );
 
-        if (recentPushEvents.length < pushEvents.length) {
-            break;
+                const commitDetails = await Promise.all(commitDetailsPromises);
+                commits.push(...commitDetails);
+            }
+        } catch (error: any) {
+            console.error(
+                `   > Failed to fetch commits for ${repo.name}: ${error.message}`,
+            );
         }
     }
 
