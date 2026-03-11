@@ -2,6 +2,7 @@ import { getExcludedLangs, getExcludedRepos } from './exclude';
 import { githubRequest } from './github-api-client';
 import { calculateTotalLanguages, createLanguageStats } from './language-stats';
 import type { GistDescription, GistID, GitHubUsername } from './types/env';
+import { getLanguageWeights } from './weight';
 
 const { GH_TOKEN, GH_USERNAME, TL_GIST_ID, TL_GIST_DESCRIPTION } = process.env;
 
@@ -45,8 +46,10 @@ const main = async () => {
         console.log('Total languages calculated');
 
         const excludedLangs = getExcludedLangs();
+        const langWeights = getLanguageWeights();
+
         console.log('Generating stats...');
-        const statsLine = createLanguageStats(totalLang, excludedLangs);
+        const statsLine = createLanguageStats(totalLang, excludedLangs, langWeights);
         console.log('Generated stats:');
         console.log(statsLine);
 

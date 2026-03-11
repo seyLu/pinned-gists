@@ -76,9 +76,14 @@ const formatLanguageStats = (stats: LanguageStat[]): string => {
 export const createLanguageStats = (
     languageTotals: Record<string, number>,
     excludedLanguages: Set<string>,
+    languageWeights: Record<string, number>,
 ) => {
     const sorted = Object.entries(languageTotals)
         .filter(([language]) => !excludedLanguages.has(language))
+        .map(([language, bytes]) => {
+            const weight = languageWeights[language] ?? 1.0;
+            return [language, bytes * weight] as [string, number];
+        })
         .sort((a, b) => b[1] - a[1]);
 
     const totalBytes = sorted.reduce((sum, [, bytes]) => sum + bytes, 0);
